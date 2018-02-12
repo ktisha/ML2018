@@ -1,0 +1,13 @@
+*.aux
+*.dvi
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
+notebooks/.ipynb_checkpoints
+.DS_Store
+*.idea
+additional/check
+**/_minted-*
