@@ -1,0 +1,660 @@
+\documentclass[10pt]{beamer}
+\input{../base}
+
+\title{Лекция 3}
+\subtitle{Кластеризация}
+
+\begin{document}
+
+\maketitle
+
+\section{Разбор летучки}
+
+\section{Мотивирующий пример}
+
+{\foot{\href{https://www.kaggle.com/abcsds/pokemon}{Pokemon with stats (https://www.kaggle.com/abcsds/pokemon)}}
+\begin{frame}{Мотивирующий пример}
+	\begin{figure}
+	    \centering
+	    \subfloat{{\includegraphics[width=2cm]{../lecture2/images/Bulbasaur} }}
+	    \qquad
+	    \subfloat{{\includegraphics[width=2cm]{../lecture2/images/Mewtwo} }}
+    	    \qquad
+    	    \subfloat{{\includegraphics[width=2cm]{../lecture2/images/Volcanion} }}
+    	    \qquad
+    	    \subfloat{{\includegraphics[width=2cm]{../lecture2/images/Ekans} }}
+    	    \qquad
+    	    \subfloat{{\includegraphics[width=2cm]{../lecture2/images/Nidorina} }}
+	    \qquad 
+    	    \subfloat{{\includegraphics[width=2cm]{../lecture2/images/Rattata} }}
+	    \qquad
+    	    \subfloat{{\includegraphics[width=2cm]{../lecture2/images/Sandshrew} }}
+	    \qquad
+    	    \subfloat{{\includegraphics[width=2cm]{../lecture2/images/Articuno} }}    	        	    
+	\end{figure}
+\end{frame}
+}
+
+\begin{frame}{Датасет}
+    \centering
+	\includegraphics[width=\textwidth]{../lecture2/images/pokemons}
+\end{frame}
+
+\begin{frame}{Постановка задачи кластеризации}
+  Кластеризация -- задача разделения объектов одной природы на несколько групп так, чтобы объекты в одной группе обладали одним и тем же свойством.\\
+  \bigbreak
+  \pause
+  Кластеризация -- это обучение без учителя.
+
+\end{frame}
+
+\begin{frame}{Постановка задачи кластеризации}
+	$X$ -- пространство объектов\\
+	$\rho: X \times X \rightarrow [0, \infty)$ -- функция расстояния между объектами\\
+	\bigbreak
+	\alert{Найти}:\\
+	$Y$ -- множество кластеров \\
+	$a: X \rightarrow Y$ -- алгоритм кластеризации
+\end{frame}
+
+\section{Гипотеза компактности}
+
+\section{Какие функции расстояния мы знаем?}
+
+\section{Степени свободы в постановке задачи}
+
+\begin{frame}{Степени свободы в постановке задачи}
+	\begin{itemize} [<+- | alert@+>]
+		\item[--] Критерий качества кластеризации
+		\item[--] Число кластеров неизвестно заранее
+		\item[--] Результат кластеризации существенно зависит от метрики
+	\end{itemize}
+\end{frame}
+
+\section{Цели кластеризации}
+
+\begin{frame}{Цели кластеризации}
+	\begin{itemize} [<+- | alert@+>]
+		\item[--] Сократить объём хранимых данных
+		\item[--] Выделить нетипичные объекты
+		\item[--] Упростить дальнейшую обработку данных
+		\item[--] Построить иерархию множества объектов				
+	\end{itemize}
+\end{frame}
+
+\section{Какие бывают кластеры?}
+
+\begin{frame}{Сгущения}
+	\begin{center}
+    \includegraphics[height=0.6 \textheight, keepaspectratio = true]{images/cluster1}  
+	\end{center}
+\end{frame}
+
+\begin{frame}{С центром}
+	\begin{center}
+	  \includegraphics[height=0.6 \textheight, keepaspectratio = true]{images/cluster3}  
+	\end{center}
+\end{frame}
+
+\begin{frame}{С перемычками}
+	\begin{center}
+	  \includegraphics[height=0.6 \textheight, keepaspectratio = true]{images/cluster4}  
+	\end{center}
+\end{frame}
+
+\begin{frame}{Ленты}
+	\begin{center}
+	  \includegraphics[height=0.6 \textheight, keepaspectratio = true]{images/cluster2}  
+	\end{center}
+\end{frame}
+
+\begin{frame}{На фоне}
+	\begin{center}
+	  \includegraphics[height=0.6 \textheight, keepaspectratio = true]{images/cluster5}  
+	\end{center}
+\end{frame}
+
+\begin{frame}{Перекрывающиеся}
+	\begin{center}
+	  \includegraphics[height=0.6 \textheight, keepaspectratio = true]{images/cluster6}  
+	\end{center}
+\end{frame}
+
+\section{Чувствительность к нормировке признаков}
+
+\begin{frame}{Чувствительность к нормировке}
+	\begin{center}
+	  \includegraphics[height=0.8 \textheight, keepaspectratio = true]{images/weight_height1}  
+	\end{center}
+\end{frame}
+
+\begin{frame}{Чувствительность к нормировке}
+	\begin{center}
+	  \includegraphics[height=0.8 \textheight, keepaspectratio = true]{images/weight_height2}  
+	\end{center}
+\end{frame}
+
+\begin{frame}{Чувствительность к нормировке}
+	\begin{center}
+	  \includegraphics[height=0.8 \textheight, keepaspectratio = true]{images/weight_height3}  
+	\end{center}
+\end{frame}
+
+\begin{frame}{Чувствительность к нормировке}
+	\begin{center}
+	  \includegraphics[height=0.8 \textheight, keepaspectratio = true]{images/weight_height4}  
+	\end{center}
+\end{frame}
+
+%\section{Оценка качества кластеризации}
+%
+%\begin{frame}{Оценка качества кластеризации}
+%  \alert{Идея}: Минимизировать среднее внутрикластерное расстояние и при этом максимизировать среднее межкластерное расстояние.
+%	\bigbreak
+%	\pause
+%	$${\frac{\sum\limits_{a(x_i) = a(x_j)} \rho(x_i, x_j)}{\sum\limits_{a(x_i) = a(x_j)} 1} \rightarrow \min}$$
+%	\bigbreak
+%	\pause
+%	$${\frac{\sum\limits_{a(x_i) \neq a(x_j)} \rho(x_i, x_j)}{\sum\limits_{a(x_i) \neq a(x_j)} 1} \rightarrow \max}$$
+%\end{frame}
+
+\begin{frame}{Методы кластеризации}
+	\begin{enumerate} [-]
+    \item Статистические 				
+		\item Графовые 
+		\item Иерархические
+	\end{enumerate}
+\end{frame}
+
+\section{Статистические алгоритмы}
+
+%\begin{frame}{Алгоритм FOREL}
+%  \alert{Идея}:\\
+%	\begin{itemize}
+%		\item[--] Выделить все точки выборки $x_i$, попадающие внутрь сферы $\rho(x_i, x_0) \leq R$
+%		\item[--] Перенести $x_0$ в центр тяжести выделенных точек
+%		\item[--] Повторять пока $x_0$ не стабилизируется
+%	\end{itemize}
+%\end{frame}
+%
+%\begin{frame}{Алгоритм FOREL}
+%	\begin{algorithmic}[1]
+%        \Function{forel}{$X$, $R$}
+%            \State ${U \gets X}$, $C \gets 0$
+%            \While{${U \neq 0}$}                
+%                \State выбрать случайную точку $x_0$
+%                \MRepeat [пока $x_0$ не стабилизируется] 
+%                		\State ${c = \left\{ x \in X \vert \rho(x, x_0) < R \right\}}$
+%                		\State $x_0 = \frac{1}{\vert c \vert} \sum\limits_{x_i \in c} x_i$
+%                	\EndRepeat
+%    		        \State ${U = U \setminus c}$, ${C = C \cup \left\{ c \right\}}$
+%            \EndWhile            
+%        \EndFunction
+%    \end{algorithmic}
+%\end{frame}
+%
+%\begin{frame}{Алгоритм FOREL}
+%	\begin{itemize} [<+- | alert@+>]
+%		\item[+] Наглядность
+%		\item[+] Сходимость
+%		\bigbreak
+%		\item[--] Зависимость от выбора $x_0$
+%		\item[--] Плохо работает, если изначальная выборка плохо делится на кластеры
+%	\end{itemize}
+%\end{frame}
+
+% можно какую-нибудь иллюстрацию придумать
+
+{\foot{k-means}
+\begin{frame}{Метод $k$-средних}
+	\alert{Идея}: Мы можем искать центры кластеров путем усреднения вектора признаков объектов.
+	\pause
+	\bigbreak
+	$${\sum\limits_{i = 1}^l \Vert x_i -\mu_i \Vert^2 \rightarrow \min}$$\\
+	\bigbreak
+	$\mu_i$ -- ближайший к $x_i$ центр кластера
+\end{frame}
+}
+
+\begin{frame}{Метод $k$-средних}
+	\begin{algorithmic}[1]
+        \Function{kmeans}{$k$}
+            \State Инициализировать $\mu_i$, $i = 1 \dots k$
+            \MRepeat [пока $\mu_c$ не перестанет меняться] 
+                \State $c_i = \arg\min\limits_{c \in 1\dots k} \rho(x_i, \mu_c)$ \hspace{5mm} $i = 1,\dots, l$\\
+                
+                \State ${\mu_{c} = \frac{\sum\limits_{j=1,\dots, n} [c_i = c] x_i^j}{\sum\limits_{c_i = c} 1} }$ \hspace{10mm} $c \in 1 \dots k$
+             \EndRepeat
+        \EndFunction
+  \end{algorithmic}    
+	\bigbreak
+	$\mu_{c}$ -- новое положение центров кластеров\\
+	$c_i$ -- принадлежность $x_i$ к кластеру\\
+	$\rho(x_i, \mu_c)$ -- расстояние от $x_i$ до центра кластера $\mu_c$
+\end{frame}
+
+\begin{frame}{Метод $k$-средних}
+	\begin{center}
+	  \includegraphics[width= \textwidth, keepaspectratio = true]{images/kmeans1}   
+	\end{center}
+\end{frame}
+
+\begin{frame}{Метод $k$-средних}
+	\begin{center}
+	  \includegraphics[width= \textwidth, keepaspectratio = true]{images/kmeans2}   
+	\end{center}
+\end{frame}
+
+\begin{frame}{Метод $k$-средних}
+	\begin{center}
+	  \includegraphics[width= \textwidth, keepaspectratio = true]{images/kmeans3}   
+	\end{center}
+\end{frame}
+
+\begin{frame}{Метод $k$-средних}
+	\begin{center}
+	  \includegraphics[width= \textwidth, keepaspectratio = true]{images/kmeans4}   
+	\end{center}
+\end{frame}
+
+\begin{frame}{Особенности метода $k$-средних}
+	\begin{itemize}
+		\item[--] Чувствительность к начальному выбору $\mu_c$
+		\item[--] Необходимость задавать $k$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Чувствительность к начальному выбору $\mu_c$}
+	\begin{center}
+	  \includegraphics[width= \textwidth, keepaspectratio = true]{images/localmin1}  
+	\end{center}
+\end{frame}
+
+\begin{frame}{Чувствительность к начальному выбору $\mu_c$}
+	\begin{center}
+	  \includegraphics[width= \textwidth, keepaspectratio = true]{images/localmin2}  
+	\end{center}
+\end{frame}
+
+\begin{frame}{Чувствительность к начальному выбору $\mu_c$}
+	\begin{center}
+	  \includegraphics[width= \textwidth, keepaspectratio = true]{images/localmin3}  
+	\end{center}
+\end{frame}
+
+\begin{frame}{Чувствительность к начальному выбору $\mu_c$}
+	\begin{center}
+	  \includegraphics[width= \textwidth, keepaspectratio = true]{images/localmin4}  
+	\end{center}
+\end{frame}
+
+\begin{frame}{Необходимость задавать $k$}
+	\begin{center}
+	  \includegraphics[width= \textwidth, keepaspectratio = true]{images/k_means_k}  
+	\end{center}
+\end{frame}
+
+\begin{frame}{Необходимость задавать $k$}
+	\begin{center}
+	  \includegraphics[width= \textwidth, keepaspectratio = true]{images/k_means_k4}  
+	\end{center}
+\end{frame}
+
+\begin{frame}{Необходимость задавать $k$}
+	\begin{center}
+	  \includegraphics[width= \textwidth, keepaspectratio = true]{images/k_means_k7}  
+	\end{center}
+\end{frame}
+
+\section{Устранение недостатков}
+
+\begin{frame}{Инициализация $\mu_c$}
+  \begin{itemize} [<+->]
+    \item Случайным образом
+    \item Взять наиболее удалённые объекты выборки
+    \item Несколько случайных кластеризаций
+    \item Использование k-means++
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{k-means++}
+	\alert{Идея}:\\
+	\begin{enumerate}
+		\item Выбрать первый центроид случайным образом
+		\item Для каждой точки найти значение квадрата расстояния до ближайшего центроида.
+		\item Выбрать из этих точек следующий центроид так, чтобы вероятность выбора точки была пропорциональна вычисленному для неё квадрату расстояния
+	\end{enumerate}
+\end{frame}
+
+{\foot{\href{https://www.cs.cmu.edu/~dpelleg/download/xmeans.pdf}{https://www.cs.cmu.edu/~dpelleg/download/xmeans.pdf}}
+\begin{frame}{X-means}
+	\alert{Идея}:\\
+	\begin{enumerate}
+		\item Получать на вход не k, а диапазон, в котором может находиться k.
+		\item Запустить k-means на самом маленьком значении из диапазона.
+		\item Разбить пополам полученные кластеры и проверить, не улучшилась ли кластеризация.
+	\end{enumerate}
+\end{frame}
+}
+
+%\begin{frame}{X-means}
+%\TODO{картинка}
+%	\begin{figure}[htbp]
+%	  \includegraphics[height=140pt, keepaspectratio = true]{images/x-means}  
+%	    \includegraphics[height=140pt, keepaspectratio = true]{images/x-means-1}
+%	\end{figure}
+%https://www.cs.cmu.edu/~dpelleg/download/xmeans.pdf
+%\end{frame}
+
+% Слишком сложно?
+%\begin{frame}{X-means}
+%  \begin{center}
+%    Как проверить, что кластеризация улучшилась?
+%  \end{center}
+%\end{frame}
+
+%\begin{frame}{Байесовский информационный критерий}
+%	$BIC_j = L_j(X)  + \frac{d}{2} \log(l)$\\
+%	\bigbreak
+%	$L_j$ -- логарифмическая функция правдоподобия для $j$-й модели \\
+%	$d$ -- длина вектора параметров\\
+%	$l$ -- количество объектов в выборке\\
+%\end{frame}
+
+\section{Интересные результаты}
+
+{\foot{\href{https://www.reddit.com/r/pokemonconspiracies/comments/2uu7lc/arcanine_was_meant_to_be_a_legendary/
+}{Pokemon Conspiracies}}
+\begin{frame}{Интересные результаты}
+	\begin{center}
+	  	\includegraphics[keepaspectratio = true]{images/Arcanine}  \\
+	  	Arcanine
+	\end{center}
+\end{frame}
+
+\begin{frame}{Интересные результаты}
+	\begin{center}
+	  \includegraphics[width= \textwidth, height=0.8 \textheight, keepaspectratio = true]{images/legendary_arcanine}  
+	\end{center}
+\end{frame}
+}
+
+\section{Когда k-means работает плохо}
+
+\begin{frame}{"Не сферические данные"}
+	\begin{center}
+	  \includegraphics[width=\textwidth, keepaspectratio = true]{images/non_spherical-1}  
+	\end{center}
+\end{frame}	
+
+\begin{frame}{"Не сферические данные"}
+	\begin{center}
+	  \includegraphics[width=\textwidth, keepaspectratio = true]{images/non_spherical-2}  
+	\end{center}
+\end{frame}	
+
+\begin{frame}{"Не сферические данные"}
+	\begin{center}
+	  \includegraphics[width=\textwidth, keepaspectratio = true]{images/non_spherical-3}  
+	\end{center}
+\end{frame}	
+
+\begin{frame}{Разноразмерные кластеры}
+	\begin{center}
+	  \includegraphics[width=\textwidth, height=0.8 \textheight, keepaspectratio = true]{images/different_sizes-1}  
+	\end{center}
+\end{frame}
+
+\begin{frame}{Разноразмерные кластеры}
+	\begin{center}
+	  \includegraphics[width=\textwidth, height=0.8 \textheight, keepaspectratio = true]{images/different_sizes-2}  
+	\end{center}
+\end{frame}
+
+\section{Графовые алгоритмы}
+
+\begin{frame}{Графовые алгоритмы}
+  \begin{center}
+    Какие есть две очевидные идеи?
+  \end{center}    
+\end{frame}
+
+\begin{frame}{Графовые алгоритмы}
+	Идеи:\\
+	\begin{enumerate}
+		\item Выделение связных компонент
+		\item Минимальное покрывающее дерево
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}{Выделение связных компонент}
+	\begin{enumerate}
+		\item Рисуем полный граф с весами, равными расстоянию между объектами
+		\item Выбираем лимит расстояния $r$ и выкидываем все ребра\\ длиннее $r$
+		\item Компоненты связности полученного графа -- наши кластеры
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}{Выделение связных компонент}
+  \begin{center}
+    Как искать \alert{компоненты связности}?
+  \end{center}
+\end{frame}
+
+\begin{frame}{Минимальное покрывающее дерево}
+	Минимальное остовное дерево -- дерево, содержащее все вершины графа и имеющее минимальный суммарный вес ребер.\\
+\end{frame}
+
+\begin{frame}{Минимальное покрывающее дерево}
+  Как использовать минимальное остовное дерево для разбиения на кластеры?
+\end{frame}
+
+\begin{frame}{Минимальное покрывающее дерево}
+	Строим минимальное остовное дерево, а потом выкидываем из него ребра максимального веса.\\
+	\bigbreak
+	Сколько ребер выбросим -- столько кластеров получим.
+\end{frame}
+
+\section{Иерархическая кластеризация}
+
+\begin{frame}{Агломеративный алгоритм Ланса-Уильямса}
+	\alert{Идея}:\\
+	\begin{enumerate}
+		\item Считаем каждую точку кластером. 
+		\item Затем объединяем ближайшие точки в новый кластер. 
+		\item Повторяем.
+	\end{enumerate}
+\end{frame}
+
+
+\begin{frame}{Алгоритм Ланса-Уильямса}
+	\begin{algorithmic}[1]
+        \Function{lance-williams}{$X^l$}
+            \State ${C_1 = \left\{ \left\{ x_1\right\}, \left\{x_2 \right\}, \dots, \left\{x_l \right\} \right\}}$
+            \For {${i=2, \dots, l }$}
+            		\State ${(U, V) = \arg\min\limits_{U \neq V} \rho(U, V)}$
+            		\State $W = U \cup V$
+            		\State ${C_i = C_{i-1} \cup \left\{ W \right\}\setminus \left\{U, V \right\} }$
+            		\For {\textbf{each} ${S \in C_i}$}
+            			\State вычислить $\rho(W, S)$
+            		\EndFor
+            	\EndFor
+        \EndFunction
+    \end{algorithmic}   
+\end{frame}
+	
+\begin{frame}{Алгоритм Ланса-Уильямса}
+  \begin{center}
+    Чего-то не хватает?  
+  \end{center}
+\end{frame}
+
+\begin{frame}\frametitle{Формула Ланса-Уильямса}
+	\begin{minipage}[t]{0.45\linewidth}
+    \vspace{15mm}
+ 		${ W = \left\{ U \cup V \right\} }$\\	
+		\bigbreak		
+		\alert{Знаем}:\\
+		${\rho(U, S), \rho(V, S), \rho(U, V)}$
+		\bigbreak				
+		Расстояние $\rho(W, S)$?\\	
+	\end{minipage}%
+	\begin{minipage}[t]{0.55\linewidth}
+	  \begin{figure}[htbp]
+	    \includegraphics[height=150pt, keepaspectratio = true]{images/lans-formula}  
+	  \end{figure}
+  \end{minipage}%
+\end{frame}
+
+\begin{frame}{Формула Ланса-Уильямса}
+	${ W = \left\{ U \cup V \right\} }$\\
+	\bigbreak
+	${\rho(U \cup V, S) = \alpha_U \rho(U, S) + \alpha_V \rho(V, S) + }$ \\
+	\hspace{30mm} ${ + \beta \rho(U, V) + \gamma \vert \rho(U, S) - \rho(V, S)\vert}$\\
+	\bigbreak
+	${\alpha_U, \alpha_V, \beta, \gamma}$ -- числовые параметры
+\end{frame}
+
+\begin{frame}{Параметры}
+	Значения параметров
+	${\alpha_U, \alpha_V, \beta, \gamma}$ ?
+\end{frame}
+
+\begin{frame}{Расстояние ближнего соседа}
+	\begin{figure}[htbp]
+	  \includegraphics[height=150pt, keepaspectratio = true]{images/lans1}  
+	\end{figure}
+	\pause
+	${\alpha_U = \alpha_V = \frac{1}{2}}$ \\${\beta = 0}$ \\${\gamma = -\frac{1}{2}}$
+\end{frame}
+
+\begin{frame}{Расстояние дальнего соседа}
+	\begin{figure}[htbp]
+	  \includegraphics[height=150pt, keepaspectratio = true]{images/lans2}  
+	\end{figure}
+	\pause
+	${\alpha_U = \alpha_V = \frac{1}{2}}$ \\${\beta = 0}$ \\${\gamma = \frac{1}{2}}$
+\end{frame}
+
+\begin{frame}{Групповое среднее}
+	\begin{figure}[htbp]
+	  \includegraphics[height=150pt, keepaspectratio = true]{images/lans3}  
+	\end{figure}
+	\pause
+	${\alpha_U = \frac{\vert U \vert}{\vert W \vert}}$\\${\alpha_V = \frac{\vert V \vert}{\vert W \vert}}$ \\${\beta = \gamma = 0}$
+\end{frame}
+
+\begin{frame}{Расстояние Уорда}
+	\begin{figure}[htbp]
+	  \includegraphics[height=150pt, keepaspectratio = true]{images/lans4}  
+	\end{figure}
+
+  ${\alpha_U = \frac{\vert S \vert + \vert U \vert}{\vert S \vert + \vert W \vert}}$\\${\alpha_V = \frac{\vert S \vert + \vert V \vert}{\vert S \vert + \vert W \vert}}$ \\${\beta = \frac{ -\vert S \vert}{\vert S \vert + \vert W \vert}}$ \\${\gamma = 0}$
+\end{frame}
+
+\section{Визуализация кластеров}
+
+{\foot{Treemap}
+\begin{frame}{Диаграмма вложения}
+  \begin{center}
+    \includegraphics[height=0.8 \textheight, keepaspectratio = true]{images/diagram}    
+  \end{center}
+\end{frame}
+}
+
+\begin{frame}{Дендрограмма}
+  \begin{center}
+    \includegraphics[height=\textheight, width=\textwidth, keepaspectratio = true]{images/dendrogram}    
+  \end{center}
+\end{frame}
+
+\begin{frame}{Дендрограмма}
+  \begin{center}
+    \includegraphics[height=0.8 \textheight, width=0.8 \textwidth, keepaspectratio = true]{images/dendrogram1}    
+  \end{center}
+\end{frame}
+
+\begin{frame}{Вопрос}
+  \centering  
+  Может ли так случиться, что дендрограмма имеет самопересечения?
+\end{frame}
+
+\begin{frame}{Свойство монотонности}
+  Кластеризация монотонна, если на каждом шаге расстояние $\rho$ между объединяемыми кластерами не уменьшается.\\
+  \bigbreak  
+  $$\rho_2 \leq \rho_3 \leq \dots \leq \rho_l$$
+\end{frame}
+
+\section{Обучение с частичным привлечением учителя}
+
+\begin{frame}[standout]
+  Вопросы?
+\end{frame}
+
+\appendix
+
+{\foot{Affinity Propagation}
+\begin{frame}{Метод распространения близости}
+  \alert{Идея}: Позволим объектам обновлять информацию друг о друге, для того, чтобы выбрать центр кластера.\\
+  \pause
+  \bigbreak
+  $s(i, k)$ -- "похожесть" объекта $x_i$ на $x_k$, $s(k, k) < 0$.\\
+  $r(i, k)$ -- "ответственность", $x_i$ решает насколько $x_k$ подходит для того, чтобы быть центром кластера.\\
+  $a(i,k)$ -- "доступность", $x_k$ решает насколько подходит для того, чтобы быть центром кластера $x_i$.\\
+  \bigbreak
+\end{frame}
+}
+
+\begin{frame}{Метод распространения близости}
+	\begin{algorithmic}[1]
+        \Function{affinity\_propagation}{$S$}
+            \State $R \gets 0$, $A \gets 0$            
+            \MRepeat [пока $c_i$ не перестанет меняться] 
+                \State $r(i, k) = s(i,k) - \max\limits_{j \neq k} (a(i,j) + s(i,j))$
+                \State $a(k,k) = \sum\limits_{j \neq k} \max(0, r(j,k))$
+                \State $i \neq k: a(i,k) = \min(0, r(k,k) + \sum\limits_{j \neq k} \max(0, r(j,k)))$
+                \State $c_i = \arg\max\limits_{k} (a(i,k) + r(i,k))$                
+             \EndRepeat
+        \EndFunction
+  \end{algorithmic}    
+\end{frame}
+
+\begin{frame}{Метод распространения близости}
+  \begin{enumerate}[<+- | alert@+>]
+    \item[+] Не нужно задавать количество кластеров
+    \item[+] "Выбросы" выделяются в отдельные кластеры
+    \bigbreak
+    \item[--] Долгое время работы
+    \item[--] Часто нуждается в постобработке
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}\frametitle{Что почитать по этой лекции}
+  \begin{itemize}
+    \item Christopher M. Bishop "Pattern Recognition and Machine Learning" Chapter 9
+    \item G. James, D. Witten, T. Hastie, R. Tibshirani "An Introduction to Statistical Learning" Chapter 10.3
+  \end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Что происходит сейчас в области}
+  ICML'16: \href{https://arxiv.org/pdf/1602.03258.pdf}{Interactive Bayesian Hierarchical Clustering}\\
+  \bigbreak
+  ICML'16: \href{https://arxiv.org/pdf/1602.01198.pdf}{k-variates++: more pluses in the k-means++}\\
+  \bigbreak
+  NIPS'16: \href{https://arxiv.org/pdf/1606.02404}{Clustering with Same-Cluster Queries}\\
+  \bigbreak
+  NIPS'16: \href{https://las.inf.ethz.ch/files/bachem16fast.pdf}{Fast and Provably Good Seedings for k-Means}\\
+\end{frame}
+
+\begin{frame}{На следующей лекции}
+  	\begin{enumerate} [--]
+		\item Деревья принятия решений
+		\item Виды правил
+		\item Поиск информативных закономерностей		
+		\item Подрезание деревьев	
+		\item Oblivious деревья
+		\item Random forest
+	\end{enumerate}
+\end{frame}
+
+\end{document}
