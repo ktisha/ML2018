@@ -45,7 +45,8 @@
 \begin{frame} {Вероятностная постановка задачи}
   $X$ -- множество объектов\\
   $Y$ -- множество меток классов\\
-  $X \times Y$ -- вероятностное пространство с плотностью \\
+  $X \times Y$ -- вероятностное пространство с плотностью $p(x,y)$\\
+  \pause
   $$p(x,y) = P_yp(x|y)$$\\
   \bigbreak
   $P_y$ -- априорная вероятность класса $y$\\
@@ -202,10 +203,10 @@ $$p(x|y) = \theta_{yx}$$
 \begin{frame}{Наивный Байесовски классификатор}
   Оценим методом максимального правдоподобия априорные вероятности классов $\hat{P}_y$ и параметры распределения Бернулли 
   $\hat{\theta}_{yd}$\\
-  $$\hat{P}_y = \frac{\sum\limits_{i=1}^l [y_i = y]}{l} \qquad \hat{\theta}_{yd} = \frac{\sum\limits_{i=1}^l [y_i = y] x_{id}}{\sum\limits_{i=1}^l [y_i = y]}$$\\
+  $$\hat{P}_y = \frac{\sum\limits_{i=1}^l [y_i = y]}{l} \qquad \hat{\theta}_{yd} = \frac{\sum\limits_{i=1}^l [y_i = y] x_{i}^d}{\sum\limits_{i=1}^l [y_i = y]}$$\\
   \bigbreak
   \pause
-  $$a(x) = \arg\max\limits_{y \in Y} \lambda_y \hat{P}_y \prod\limits_{d=1}^{|V|} Ber(x_{id}; \hat{\theta_{yd}})$$
+  $$a(x) = \arg\max\limits_{y \in Y} \lambda_y \hat{P}_y \prod\limits_{d=1}^{|V|} Ber(x_{i}^d; \hat{\theta}_{yd})$$
 \end{frame}
 
 \begin{frame}{Пример}
@@ -233,7 +234,7 @@ $$p(x|y) = \theta_{yx}$$
 {\foot{Laplace smoothing}
 \begin{frame} {Аддитивное сглаживание}
   \alert{Идея}: Введем параметр $\alpha \geq 0$ и добавим его в ОМП для распределения Бернулли.\\
-  $$\hat{\theta}_{yd}^* = \frac{\sum\limits_{i=1}^{l} [y_i = y] x_{id} + \alpha}{\sum\limits_{i=1}^{l} [y_i = y] + 2 \alpha}$$
+  $$\hat{\theta}_{yd}^* = \frac{\sum\limits_{i=1}^{l} [y_i = y] x_{i}^d + \alpha}{\sum\limits_{i=1}^{l} [y_i = y] + 2 \alpha}$$
   \bigbreak
   Если в обучающей выборке много представителей класса $y$, содержащих слово $v_d$, то $\hat{\theta}_{yd}^*$ будет стремиться к ОМП, в обратном случае $\hat{\theta}_{yd}^* \approx \frac{1}{2}$
 \end{frame}
