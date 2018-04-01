@@ -1,0 +1,461 @@
+\documentclass[10pt]{beamer}
+\input{../base}
+
+\usepackage{gensymb}
+
+\title{Лекция 8}
+\subtitle{Нейронные сети}
+
+\begin{document}	
+
+\section{Разбор летучки}
+
+\frame{\titlepage}
+
+\begin{frame}\frametitle{Модель McCulloch-Pitts}
+  $X = \mathbb{R}^n$, ${Y = \left\{ -1, + 1\right\}}$\\
+	\pause
+	$$a(x,w) = \sigma(\sum\limits_{j=1}^n w_j x^j - w_0) = \sigma(\langle \mathbf{w}, \mathbf{x} \rangle)$$\\
+  $x^j$ — признаки объекта, $j = 1,\dots, n$ \\	
+	$w_j \in R$ -- веса признаков\\
+	$\sigma(s)$ -- функция активации (например, $\sign$)
+	\pause
+	\begin{figure}[htbp]
+	  \includegraphics[height=100pt, keepaspectratio = true]{images/neuron-scheme}   
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Нейрон}
+	\begin{figure}[htbp]
+	  \includegraphics[height=200pt, keepaspectratio = true]{images/neuron}   
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Линейные алгоритмы классификации и регрессии}
+	Задача классификации: \\
+	$$a(\mathbf{x},\mathbf{w}) = \sign \langle \mathbf{w}, \mathbf{x} \rangle $$\\
+	\bigbreak
+	\bigbreak
+	$$Q(w;X^l) = \sum\limits_{i=1}^l \mathcal{L} (\langle \mathbf{w}, \mathbf{x_i}\rangle y_i) \rightarrow \min\limits_w$$\\
+\end{frame}
+
+\section{Какой класс функций можно реализовать нейроном?}
+
+\begin{frame}{Нейронная реализация логических функций}
+	\begin{figure}[htbp]
+	  \includegraphics[height=60pt, keepaspectratio = true]{images/OR}   
+	\end{figure}
+	
+	\begin{figure}[htbp]
+	  \includegraphics[height=60pt, keepaspectratio = true]{images/AND}   
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Нейронная реализация логических функций}
+	Функции И, ИЛИ от бинарных переменных $x_1$ и $x_2$:\\
+	$$x_1 \wedge x_2 = x_1 + x_2 - \frac{3}{2} > 0$$\\
+	$$x_1 \vee x_2 = x_1 + x_2 - \frac{1}{2} > 0$$\\
+\end{frame}
+
+\begin{frame}{Логическая функция XOR}
+	\begin{figure}[htbp]
+	  \includegraphics[height=150pt, keepaspectratio = true]{images/XOR}   
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Логическая функция XOR}
+	Функция $x_1 \oplus x_2 = [x_1 \neq x_2]$ не реализуема одним нейроном.\\
+	\bigbreak
+	\pause
+	Два способа реализации:\\
+	\begin{enumerate}[<+->]
+		\item Добавлением нелинейного признака:\\
+		$$x_1 \oplus x_2 = [x_1 + x_2 + 2 \textcolor{orange}{x_1x_2} - \frac{1}{2} > 0]$$
+		\item Сетью (двухслойной суперпозицией) функций И, ИЛИ:\\
+		$$x_1 \oplus x_2 = [(x_1 \vee x_2) - (x_1 \wedge x_2) - \frac{1}{2} > 0]$$
+		\end{enumerate}
+\end{frame}
+
+\begin{frame}{Логическая функция XOR}
+	\begin{figure}[htbp]
+	  \includegraphics[height=150pt, keepaspectratio = true]{images/XOR1}   
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Любую ли функцию можно представить нейросетью?}
+	\begin{itemize}[<+->]
+		\item Двухслойная сеть в $\left\{0, 1 \right\}^n$ позволяет реализовать произвольную булеву функцию.
+		\item Двухслойная сеть в $\mathbb{R}^n$ позволяет отделить произвольный выпуклый многогранник.
+		\item Трёхслойная сеть $\mathbb{R}^n$ позволяет отделить произвольную многогранную область, не обязательно выпуклую.
+		\item С помощью линейных операций и одной нелинейной функции активации $\sigma$ можно приблизить любую непрерывную функцию с любой желаемой точностью
+	\end{itemize}
+\end{frame}
+
+%\begin{frame}{Практические рекомендации}
+%	\begin{enumerate}[--]
+%    	\item Двух-трёх слоёв обычно достаточно.
+%	  \item Можно достраивать нейроны в произвольных местах сети по необходимости.
+%	\end{enumerate}
+%\end{frame}
+
+\begin{frame}{Многослойная нейронная сеть}
+	Пусть $Y = \mathbb{R}^M$, два слоя в сети.\\
+	
+	\begin{figure}[htbp]
+	  \includegraphics[height=150pt, keepaspectratio = true]{images/neural_network}   
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Многослойная нейронная сеть}
+	\begin{figure}[htbp]
+	  \includegraphics[height=100pt, keepaspectratio = true]{images/neural_network1}   
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Стохастический градиент}
+  ${Q}(\mathbf{w}) = \sum\limits_{i=1}^l \mathcal{L}(w, x_i, y_i) \rightarrow \min\limits_w$ \\
+  \bigbreak
+  \begin{algorithmic}[1]
+    \Function{stochastic\_gradient}{$X^l$, $\alpha$, $\eta$}
+     \State Перемешать данные в $X^l$
+     \State Инициализировать $\mathbf{w}$
+     \State ${Q}(\mathbf{w}) = \sum\limits_{i=1}^l \mathcal{L}(\langle \mathbf{w}, \mathbf{x_i} \rangle y_i)$
+     \MRepeat [пока $Q$ и/или $w$ не стабилизируются] 
+       \State Взять $x_i$ из $X^l$
+       \State Потеря: $\varepsilon_i = \mathcal{L}(w, x_i, y_i)$
+       \State Градиентный шаг: $w =  w - \alpha \triangledown \mathcal{L}(w, x_i, y_i)$
+       \State Оценить $Q = (1-\eta)Q + \eta \varepsilon_i$
+     \EndRepeat
+    \EndFunction
+  \end{algorithmic}  
+\end{frame}
+
+\section{Сколько операций потребуется для вычисления градиента в точке?}
+
+\begin{frame}{Идея}
+  \alert{Идея}: Сохранять некоторые промежуточные результаты в узлах сети.
+\end{frame}
+
+\begin{frame}{Задача дифференцирования суперпозиции функций}
+	Выходные значения $a^m(x_i)$, $m = 1,\dots,M$ на объекте $x_i$:\\
+	$$a^m(x_i) = \sigma_m (\sum\limits_{h=0}^H w_{hm} \textcolor{orange}{u^h(x_i)}), \qquad \textcolor{orange}{u^h(x_i)} = \sigma_h (\sum\limits_{j=0}^n w_{jh} x_i^j)$$\\
+	\bigbreak
+	\pause
+	Возьмем $\mathcal{L}_i(w)$ -- средний квадрат ошибки:\\
+	$$\mathcal{L}_i(w) = \frac{1}{2} \sum\limits_{m=1}^M (a^m(x_i) - y_i^m)^2$$\\
+	\bigbreak
+	\pause
+	Промежуточная задача: найти частные производные\\
+	$$\frac {\partial \mathcal{L}_i(w)}{\partial a^m} \hspace{5mm} \frac {\partial \mathcal{L}_i(w)}{\partial u^h}$$
+\end{frame}
+
+\begin{frame}{Быстрое вычисление градиента}
+  Ошибка на выходном слое:	
+	$$\frac{\partial \mathcal{L}_i(w)}{\partial a^m} = a^m (x_i) - y_i^m = \varepsilon^m_i$$ 
+	\bigbreak
+	\pause
+	Ошибка на скрытом слое:	
+	$$\frac{\partial \mathcal{L}_i(w)}{\partial u^h} = \sum\limits_{m=1}^M (a^m(x_i) - y_i^m) \sigma'_m w_{hm} = \sum\limits_{m=1}^M \varepsilon^m_i \sigma'_m w_{hm} = \varepsilon^h_i$$
+	\bigbreak
+	\pause
+	$\varepsilon_i^h$ вычисляется по $\varepsilon_i^m$, если запустить сеть «задом наперёд»:\\
+	
+	\begin{figure}[htbp]
+	  \includegraphics[height=50pt, keepaspectratio = true]{images/backpropagation}   
+	\end{figure}
+
+\end{frame}
+
+\begin{frame}{Быстрое вычисление градиента}
+	Теперь, имея частные производные $\mathcal{L}_i(w)$ по $a^m$ и $u^h$, легко выписать градиент $\mathcal{L}_i(w)$ по весам $w$.\\
+	\bigbreak
+	\pause
+	\alert{Вопрос}: как?
+\end{frame}
+
+\begin{frame}{Быстрое вычисление градиента}
+	$$\frac {\partial \mathcal{L}_i(w)}{\partial w_{hm}} = \frac {\partial \mathcal{L}_i(w)}{\partial a^m} \frac {\partial a^m}{\partial w_{hm}} = \varepsilon^m_i \sigma'_m u^h(x_i), \hspace{50mm}$$ $$m = 1,\dots,M, \hspace{2mm} h = 0,\dots, H$$\\
+	\bigbreak
+	\pause
+	$$\frac {\partial \mathcal{L}_i(w)}{\partial w_{jh}} = \frac {\partial \mathcal{L}_i(w)}{\partial u^h} \frac {\partial u^h}{\partial w_{jh}} = \varepsilon_i^h \sigma'_h x_i^j, \hspace{50mm}$$ $$h = 1,\dots,H, \hspace{2mm} j = 0,\dots, n$$ \\
+\end{frame}
+
+{\foot{Backpropagation}
+\begin{frame}{Алгоритм обратного распространения ошибки}
+  \begin{algorithmic}[1]
+    \Function{Backpropagation}{$X^l$, $H$, $\alpha$, $\eta$}
+     \State \dots
+     \MRepeat [пока $Q$ не стабилизируются] 
+       \State Взять $x_i$ из $X^l$
+       \pause
+       \State 	$\begin{cases}
+	\hspace{5mm} u^h_i = \sigma_h (\sum\limits_{j=0}^J w_{jh} x_i^j), \hspace{4mm} h = 1, \dots, H\\
+	\hspace{5mm} a^m_i = \sigma_m (\sum\limits_{h=0}^H w_{hm} u_i^h), \hspace{4mm} \varepsilon_i^m = a_i^m - y_i^m, \hspace{4mm} m = 1, \dots, M\\
+	\hspace{5mm} \mathcal{L}_i = \frac{1}{2} \sum\limits_{m=1}^M (\varepsilon_i^m)^2\\
+	\end{cases}$\\
+	\pause
+	$\begin{cases} \hspace{5mm} \varepsilon_i^h = \sum\limits_{m=1}^M \varepsilon_i^m \sigma'_m w_{hm}, \hspace{4mm} h = 1, \dots, H\end{cases}$\\
+	\pause
+	$\begin{cases} \hspace{5mm} w_{hm} = w_{hm} - \alpha \varepsilon_i^m \sigma'_m u_i^h, \hspace{4mm} h = 0, \dots, H, \hspace{4mm} m = 1, \dots, M\\
+	\hspace{5mm} w_{jh} = w_{jh} - \alpha \varepsilon_i^h \sigma'_h x_i^j, \hspace{4mm} j = 0, \dots, n, \hspace{4mm} h = 1, \dots, H\\
+	\hspace{5mm} Q = (1 - \eta)Q + \eta \mathcal{L}_i \end{cases}$
+     \EndRepeat
+    \EndFunction
+  \end{algorithmic}    
+\end{frame}
+}
+
+\begin{frame}{Особенности}
+	\begin{enumerate}[<+->]
+	\item[+] Эффективность: градиент вычисляется за время, сравнимое со временем вычисления самой сети
+	\item[+] Легко обобщается на любые $\sigma$, $\mathcal{L}$
+	\item[+] Возможно динамическое (потоковое) обучение
+	\item[+] На сверхбольших выборках не обязательно брать все $x_i$
+	\item[+] Возможность распараллеливания
+	\bigbreak
+	\item[--] Возможна медленная сходимость
+	\item[--] Застревание в локальных минимумах
+	\item[--] Проблема переобучения
+	\item[--] Подбор комплекса эвристик
+	\end{enumerate}
+\end{frame}
+
+
+\begin{frame}{Стандартные эвристики для метода SG}
+	Применимы все те же эвристики, что и в обычном SG.\\
+	\bigbreak
+	\pause
+	Напомните.
+\end{frame}
+
+\begin{frame}{Стандартные эвристики для метода SG}
+	\begin{itemize}[<+->]
+		\item Инициализация весов
+		\item Порядок предъявления объектов
+		\item Оптимизация величины градиентного шага
+		\item Регуляризация (сокращение весов)
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Новые проблемы}
+	\begin{itemize}[<+->]
+		\item Выбор функций активации в каждом нейроне
+		\item Выбор числа слоёв и числа нейронов
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Примеры функций активации}
+	\begin{itemize}[<+->]
+		\item Сигмоида
+		$$\sigma(x) = \frac{1}{1 + e^{-x}}$$
+		\item Гиперболический тангенс
+		$$\tanh(x) = 2\sigma(2x) - 1$$
+		\item Rectified Linear Unit
+		$$f(x) = \max(0, x)$$
+	\end{itemize}
+\end{frame}
+
+%\begin{frame}{Ускорение сходимости}
+%	\begin{itemize}[<+->]
+%		\item Тщательный подбор начального приближения
+%		\item Адаптивный градиентный шаг
+%		\item Метод сопряжённых градиентов и chunking -- разбиение суммы $Q(w) = \sum\limits_{i=1}^l \mathcal{L}_i(w)$ на блоки
+%	\end{itemize}
+%\end{frame}
+
+%\begin{frame}{Начальное приближение}
+%	Нейроны настраиваются как отдельные линейные алгоритмы:
+%	\begin{itemize}
+%		\item либо по случайной подвыборке $X' \subseteq X^l$
+%		\item либо по случайному подмножеству входов
+%		\item либо из различных случайных начальных приближений
+%	\end{itemize}
+%	Tем самым обеспечивается различность нейронов.
+%\end{frame}
+
+%\begin{frame}{Оптимизация структуры сети}
+%	Динамическое наращивание сети.\\
+%	\begin{itemize}[<+->]
+%		\item Обучение при заведомо недостаточном числе нейронов $H$
+%		\item После стабилизации  $Q(w)$ -- добавление нового нейрона и его инициализация путём обучения
+%		\item Снова итерации BackProp
+%	\end{itemize}
+%	\vspace{5mm}
+%	Противоположная идея -- прореживание сети.
+%\end{frame}
+
+\section{Практическое применение}
+
+\begin{frame}{Специальные нейронные сети}
+	Почему их снова стали использовать?\\
+	\pause
+	\begin{enumerate}[--]
+		\item Большие вычислительные возможности (в том числе
+		распределенные вычисления)
+		\item Большие объемы данных
+		\item Новые методы предобучения, новые архитектуры
+	\end{enumerate}
+\end{frame}
+
+\section{Свёрточные сети}
+
+{\foot{http://www.cs.nyu.edu/~yann/talks/lecun-ranzato-icml2013.pdf}
+\begin{frame}{Свёрточные сети}
+  \begin{enumerate}
+    \item Пиксель изображения сильнее связан с соседними пикселями (локальная корреляция)
+		\item Объект может встретиться в любой части изображения (инвариантность к перемещению)
+  \end{enumerate}
+  \pause
+  \begin{enumerate}
+    \item Каждый из нейронов подсоединен только к небольшой окрестности изображения
+    \item Нейроны обладают одними и теми же весами 
+  \end{enumerate}
+\end{frame}
+}
+
+\begin{frame}{Локально-связанный слой}
+	\begin{figure}[htbp]
+	  \includegraphics[height=200pt, keepaspectratio = true]{images/local_layer}   
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Операция свертки}
+	\begin{figure}[htbp]
+	  \includegraphics[height=200pt, keepaspectratio = true]{images/conv}   
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Простейшая свертка}
+	\begin{figure}[htbp]
+	  \includegraphics[height=150pt, width=\textwidth, keepaspectratio = true]{images/conv0}   
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Простейшая свертка}
+	\begin{figure}[htbp]
+	  \includegraphics[height=150pt, width=\textwidth, keepaspectratio = true]{images/conv2}   
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Простейшая свертка}
+	\begin{figure}[htbp]
+	  \includegraphics[height=150pt, width=\textwidth, keepaspectratio = true]{images/conv1}   
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Простейшая свертка}
+	\begin{figure}[htbp]
+	  \includegraphics[height=150pt, width=\textwidth, keepaspectratio = true]{images/conv3}   
+	\end{figure}
+\end{frame}
+
+{\foot{Convolutional neural net}
+\begin{frame}{Свёрточная сеть}
+  Извлечение признаков во время обучения.\\
+
+	\begin{figure}[htbp]
+	  \includegraphics[height=150pt, keepaspectratio = true]{images/deep_learning}   
+	\end{figure}
+\end{frame}
+}
+
+{\foot{https://www.cs.toronto.edu/~fritz/absps/imagenet.pdf}
+\begin{frame}{ImageNet}
+  \centering
+  \includegraphics[width=0.9 \textwidth, keepaspectratio = true]{images/imagenet}   
+\end{frame}
+}
+
+\begin{frame}{ImageNet}
+  \centering
+  \includegraphics[width=0.9 \textwidth, keepaspectratio = true]{images/top5}   
+\end{frame}
+
+\begin{frame}{Похожие изображения}
+  \centering
+  \includegraphics[width=0.9 \textwidth, keepaspectratio = true]{images/similar}   
+\end{frame}
+
+\begin{frame}{Похожие изображения}
+  \centering
+  \includegraphics[width=\textwidth, keepaspectratio = true]{images/similar2}   
+\end{frame}
+
+{\foot{https://arxiv.org/pdf/1508.06576v1.pdf}
+\begin{frame}{Стилизация изображений}
+  \centering
+  \includegraphics[width=\textwidth, keepaspectratio = true]{images/style}   
+\end{frame}
+}
+
+\section{Рекуррентные нейронные сети}
+
+\begin{frame}{RNN}
+  \centering
+  \includegraphics[width=0.9 \textwidth, keepaspectratio = true]{images/RNN}   
+\end{frame}
+
+\begin{frame}{Пример}
+  Текст состоит из последовательности слов. Хотелось бы подавать слова на вход нейросети по очереди, но так, чтобы сеть помнила контекст.
+\end{frame}
+
+{\foot{http://karpathy.github.io/2015/05/21/rnn-effectiveness/}
+\begin{frame}{Шекспир}
+  \centering
+  \includegraphics[width=0.9 \textwidth, keepaspectratio = true]{images/shakespeare}   
+\end{frame}
+}
+
+{\foot{http://karpathy.github.io/2015/05/21/rnn-effectiveness/}
+\begin{frame}{Генерация кода}
+  \centering 
+  \includegraphics[width=0.9 \textwidth, keepaspectratio = true]{images/code}   
+\end{frame}
+}
+
+\begin{frame}{Автоматический перевод}
+  \centering 
+  \includegraphics[width=0.9 \textwidth, keepaspectratio = true]{images/translate}   
+\end{frame}
+
+\section{RNN + CNN}
+
+{\foot{http://www.cs.toronto.edu/~rkiros/adv\_L.html}
+\begin{frame}{Подпись к изображениям}
+  \centering 
+  \includegraphics[width=0.9 \textwidth, keepaspectratio = true]{images/subscr}   
+\end{frame}
+}
+
+{\foot{http://www.cs.toronto.edu/~rkiros/adv\_L.html}
+\begin{frame}{Подпись к изображениям}
+  \centering 
+  \includegraphics[width=0.9 \textwidth, keepaspectratio = true]{images/image_gen}   
+\end{frame}
+}  
+
+\begin{frame}[standout]
+  Вопросы?
+\end{frame}
+
+\appendix
+
+\begin{frame}\frametitle{Что почитать по этой лекции}
+  \begin{itemize}
+    \item \href{http://cs231n.github.io/neural-networks-1/}{Andrej Karpathy lecture notes (cs231n)}
+    \item Tom Mitchell "Machine Learning" Chapter 4.5
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{На следующей лекции}
+	\begin{itemize}
+	  	\item[--] Задача максимизации зазора - аналог классификатора с регуляризацией
+    \item[--] Двойственная задача 
+    \item[--] Что такое опорный вектор
+    \item[--] Регуляризация
+    \item[--] Решение для неразделимых выборок
+    \item[--] Kernel trick    
+	\end{itemize}
+\end{frame}
+
+\end{document}
