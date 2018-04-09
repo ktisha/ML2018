@@ -70,12 +70,12 @@
 	$X$, если все точки из $X$ лежат по одну сторону от этой гиперплоскости.\\\bigbreak
 	${a(\mathbf{x},\mathbf{w}, w_0) = \langle \mathbf{x}, \mathbf{w}\rangle - w_0 = 0}$\\
 	\bigbreak
-	\onslide<1>{
-    	Как посчитать расстояние от точки до гиперплоскости?
-  }
-  \onslide<2>{
-    Расстояние от точки до гиперплоскости = $\frac{\vert a(\mathbf{x},\mathbf{w}, w_0) \vert}{\Vert \mathbf{w} \Vert}$
-  }
+%	\onslide<1>{
+%    	Как посчитать расстояние от точки до гиперплоскости?
+%  }
+%  \onslide<2>{
+%    Расстояние от точки до гиперплоскости = $\frac{\vert a(\mathbf{x},\mathbf{w}, w_0) \vert}{\Vert \mathbf{w} \Vert}$
+%  }
 \end{frame}
 
 \begin{frame}{Максимизиция отступа}
@@ -100,7 +100,7 @@
   	  Ширина разделяющей полосы?\\
   	  }
   	\onslide<2>{
-    	Ширина разделяющей полосы: $\frac{\langle \mathbf{x_{+}}, \mathbf{w} \rangle + \langle \mathbf{x_{-}}, \mathbf{w} \rangle}{\Vert \mathbf{w} \Vert} = \frac{2}{\Vert \mathbf{w} \Vert} \rightarrow \max$\\
+    	Ширина разделяющей полосы: $\frac{\langle \mathbf{x_{+}}, \mathbf{w} \rangle - \langle \mathbf{x_{-}}, \mathbf{w} \rangle}{\Vert \mathbf{w} \Vert} = \frac{2}{\Vert \mathbf{w} \Vert} \rightarrow \max$\\
   	}
 	\begin{figure}[htbp]
 	  \includegraphics[height=100pt, keepaspectratio = true]{images/linearly_separable2}   
@@ -127,7 +127,7 @@
 	$\begin{cases}
 		\xi_i \geq 1 - M_i(\mathbf{w}, w_0) \\
 		\xi_i \geq 0
-	\end{cases} \Rightarrow \xi_i = 1 - M_i(\mathbf{w}, w_0) $\\
+	\end{cases} \Rightarrow \xi_i = 1 - M_i(\mathbf{w}, w_0)_{+} $\\
 	\begin{figure}[htbp]
 	  \includegraphics[height=100pt, keepaspectratio = true]{images/xi}   
   \end{figure}
@@ -136,12 +136,12 @@
 \begin{frame}{Задача безусловной минимизации}
 	$\begin{cases}
 		{\frac{1}{2}\Vert \mathbf{w} \Vert^2 + C \sum\limits_{i=1}^l \xi_i \rightarrow \min\limits_{\mathbf{w}, \xi}}\\
-		\xi_i = 1 - M_i(\mathbf{w}, w_0)
+		\xi_i = 1 - M_i(\mathbf{w}, w_0)_{+}
 	\end{cases}$\\
 	\bigbreak
 	\pause
 	Задача безусловной минимизации:\\
-	$ C \sum\limits_{i=1}^l (1 - M_i(\mathbf{w}, w_0)) + \frac{1}{2}\Vert \mathbf{w} \Vert^2 \rightarrow \min\limits_{\mathbf{w}}$
+	$ C \sum\limits_{i=1}^l (1 - M_i(\mathbf{w}, w_0))_{+} + \frac{1}{2}\Vert \mathbf{w} \Vert^2 \rightarrow \min\limits_{\mathbf{w}}$
 \end{frame}
 
 \begin{frame}{Минимизация эмпирического риска}
@@ -219,7 +219,7 @@
 	\pause
 	Двойственная задача:\\
 	$\begin{cases}
-		\mathcal{L} = \frac{1}{2} \Vert \mathbf{w} \Vert^2 - \sum\limits_{i = 1}^l \alpha_i (M_i(\mathbf{w}, w_0) - 1) - \sum\limits_{i = 1}^l \xi_i (\alpha_i + \mu_i - C)\\
+		\mathcal{L} = \frac{1}{2} \Vert \mathbf{w} \Vert^2 + \sum\limits_{i = 1}^l \alpha_i (1 - M_i(\mathbf{w}, w_0)) - \sum\limits_{i = 1}^l \xi_i (\alpha_i + \mu_i - C)\\
 		\xi_i \geq 0, \qquad  \alpha_i \geq 0,  \qquad  \mu_i \geq 0\\
 		\alpha_i = 0$ либо $M_i(\mathbf{w}, w_0) = 1 - \xi_i ,  \qquad i = 1, \dots, l\\
 		\mu_i = 0 $ либо $\xi_i = 0, \qquad i = 1, \dots, l
@@ -227,7 +227,7 @@
 \end{frame}
 
 \begin{frame}{Двойственная задача SVM}
-	$\mathcal{L}(\mathbf{w}, w_0, \xi) = \frac{1}{2} \Vert \mathbf{w} \Vert^2 - \sum\limits_{i = 1}^l \alpha_i (M_i(\mathbf{w}, w_0) - 1) - \sum\limits_{i = 1}^l \xi_i (\alpha_i + \mu_i -C)$\\
+	$\mathcal{L}(\mathbf{w}, w_0, \xi) = \frac{1}{2} \Vert \mathbf{w} \Vert^2 + \sum\limits_{i = 1}^l \alpha_i (1 - M_i(\mathbf{w}, w_0)) - \sum\limits_{i = 1}^l \xi_i (\alpha_i + \mu_i -C)$\\
 	\bigbreak
 	\pause
 	$\frac{\partial \mathcal{L}}{\partial \mathbf{w}}  = \mathbf{w} - \sum\limits_{i=1}^l \alpha_iy_i\mathbf{x_i} = 0 $ \hspace{5mm} $\Rightarrow \mathbf{w} = \sum\limits_{i=1}^l \alpha_iy_i\mathbf{x_i} = 0$\\
@@ -239,7 +239,7 @@
 
 \begin{frame}{Двойственная задача SVM}
 	$\begin{cases}
-	  -\mathcal{L}(\alpha) = - \sum\limits_{i = 1}^l \alpha_i  + \frac{1}{2} \sum\limits_{i = 1}^l\sum\limits_{j = 1}^l \alpha_i \alpha_j y_iy_j \langle \mathbf{x_i}, \mathbf{x_j} \rangle \rightarrow \min\limits_{\alpha}\\
+	  \mathcal{L}(\alpha) = \sum\limits_{i = 1}^l \alpha_i  - \frac{1}{2} \sum\limits_{i = 1}^l\sum\limits_{j = 1}^l \alpha_i \alpha_j y_iy_j \langle \mathbf{x_i}, \mathbf{x_j} \rangle \rightarrow \min\limits_{\alpha}\\
 	0 \leq \alpha_i \leq C\\
 	\sum\limits_{i=1}^l \alpha_iy_i = 0
 	\end{cases}$\\
