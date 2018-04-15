@@ -221,7 +221,7 @@
 \begin{frame}{Выбор параметра регуляризации $\tau$}
 	Контрольная выборка: $X^k = (x'_i, y'_i)_{i=1}^k$\\
 	%Вычисление функционала $Q$ на контрольных данных $T$ раз потребует $O(kn^2 + knT)$ операций:\\
-	$$Q(w_{\tau}^*,X^k) = \Vert X' w_{\tau}^* - y' \Vert^2 = \Vert X'U \operatorname{diag} \left(\frac{\lambda_j}{\lambda_j + \tau}\right) V^T y -y' \Vert^2$$\\
+	$$Q(w_{\tau}^*,X^k) = \Vert X^k w_{\tau}^* - y^k \Vert^2 = \Vert X^kU \operatorname{diag} \left(\frac{\lambda_j}{\lambda_j + \tau}\right) V^T y -y^k \Vert^2$$\\
 	\bigbreak
 	\pause
 	Зависимость $Q(\tau)$ обычно имеет характерный минимум.
